@@ -1,2 +1,5 @@
 *.o
 a.out
+
+# Target executable
+ali
