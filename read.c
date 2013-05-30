@@ -15,14 +15,16 @@ struct LispObj *read_from_string(char str[])
 
 struct LispObj *read_from_stream(FILE *stream)
 {
-	int x;
+	int x, n;
 
-	if (scanf("%d", &x) != 0) {
+	if ((n = scanf("%d", &x)) > 0) {
 		struct LispObj *num = malloc(sizeof(struct LispObj));
 
 		num->type        = INT;
 		num->value.l_int = x;
 
 		return num;
+	} else if (n == EOF) {
+		return NULL;
 	}
 }
