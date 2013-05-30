@@ -20,6 +20,8 @@ int main(int argc, char *argv[])
 		fputs(RESULT, stdout);
 		prin1(obj);
 		putchar('\n');
+
+		free_lisp_obj(obj);
 	}
 
 	return 1;

@@ -16,3 +16,5 @@ struct Cons {
 	struct LispObj *car;
 	struct LispObj *cdr;
 };
+
+void free_lisp_obj(struct LispObj *obj);
