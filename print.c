@@ -24,3 +24,11 @@ void prin1(struct LispObj *obj)
 
 	printf(format, obj->value);
 }
+
+/* Like prin1, but preceded by a space and followed by a newline */
+void print(struct LispObj *obj)
+{
+	putchar(' ');
+	prin1(obj);
+	putchar('\n');
+}

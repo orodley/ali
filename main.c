@@ -4,7 +4,7 @@
 #include "print.h"
 
 const char PROMPT[] = "> ";
-const char RESULT[] = ": ";
+const char RESULT[] = ":";
 
 int main(int argc, char *argv[])
 {
@@ -18,11 +18,11 @@ int main(int argc, char *argv[])
 			break;
 
 		fputs(RESULT, stdout);
-		prin1(obj);
-		putchar('\n');
+		print(obj);
 
 		free_lisp_obj(obj);
 	}
 
+	putchar('\n');
 	return 1;
 }
