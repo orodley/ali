@@ -5,6 +5,7 @@
 #include <string.h>
 #include "types.h"
 #include "cons.h"
+#include "lexer.h"
 #include "read.h"
 
 struct LispObj *read_from_string(char str[])
@@ -15,16 +16,29 @@ struct LispObj *read_from_string(char str[])
 
 struct LispObj *read_from_stream(FILE *stream)
 {
-	int x, n;
+	yyin = stream;
 
-	if ((n = scanf("%d", &x)) > 0) {
-		struct LispObj *num = malloc(sizeof(struct LispObj));
+	struct Token token;
 
-		num->type        = INT;
-		num->value.l_int = x;
-
-		return num;
-	} else if (n == EOF) {
+	if ((token = get_token()).str != NULL) {
+		switch (token.type) {
+			case T_INTEGER: {
+				int x;
+				sscanf(token.str, "%d", &x);
+				return make_int(x);
+			}
+		}
+	} else {
 		return NULL;
 	}
+}
+
+struct Token get_token()
+{
+	enum TokenType type = yylex();
+
+	return (struct Token) {
+		.str  = type != 0 ? yytext : NULL,
+		.type = type
+	};
 }

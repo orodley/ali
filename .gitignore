@@ -3,3 +3,6 @@ a.out
 
 # Target executable
 ali
+
+# Flex output
+lexer.[ch]
