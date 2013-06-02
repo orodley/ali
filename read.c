@@ -37,6 +37,15 @@ struct LispObj *read_from_stream(FILE *stream)
 
 				return make_string(str);
 			}
+			case T_SYMBOL: {
+				int len = strlen(token.str);
+
+				char *str = malloc(sizeof(char) * len);
+				strncpy(str, token.str, len);
+				*(str + len) = '\0';
+
+				return make_symbol(str);
+			}
 		}
 	} else {
 		return NULL;
