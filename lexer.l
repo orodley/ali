@@ -7,7 +7,7 @@
 INTEGER	-?[0-9]+
 /* TODO: more acceped symbol chars */
 SYMBOL	[a-zA-Z][a-zA-Z0-9]*
-STRING	\"(\\.|[^\n\\])*\"
+STRING	\"(\\.|[^"\n\\])*\"
 
 %%
 

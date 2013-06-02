@@ -17,15 +17,25 @@ struct LispObj *read_from_string(char str[])
 struct LispObj *read_from_stream(FILE *stream)
 {
 	yyin = stream;
+	struct Token token = get_token();
 
-	struct Token token;
-
-	if ((token = get_token()).str != NULL) {
+	if (token.str != NULL) { /* a NULL pointer = EOF */
 		switch (token.type) {
 			case T_INTEGER: {
 				int x;
 				sscanf(token.str, "%d", &x);
 				return make_int(x);
+			}
+			case T_STRING: {
+				int len = strlen(token.str);
+
+				/* Take a substring of token.str, skipping the first
+				 * and last chars */
+				char *str = malloc(sizeof(char) * (len - 2));
+				strncpy(str, token.str + 1, len - 2);
+				*(str + (len - 2)) = '\0';
+
+				return make_string(str);
 			}
 		}
 	} else {
