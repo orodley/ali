@@ -59,6 +59,8 @@ struct LispObj *make_cons(struct Cons *c_cons)
 void free_lisp_obj(struct LispObj *obj)
 {
 	switch (obj->type) {
+		case NIL:
+			return; /* NIL sticks around */
 		case INT:
 		case CHAR:
 			break;
