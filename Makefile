@@ -7,7 +7,7 @@ endif
 ali: main.o cons.o read.o print.o types.o lexer.o
 	cc $(CFLAGS) -o ali main.o cons.o read.o print.o types.o lexer.o
 
-main.o:  main.c read.h types.h
+main.o:  main.c read.h types.h lexer.h
 	cc $(CFLAGS) -c main.c
 cons.o:  cons.c types.h
 	cc $(CFLAGS) -c cons.c

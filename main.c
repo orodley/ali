@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "read.h"
 #include "types.h"
 #include "print.h"
 #include "lexer.h"
+#include "read.h"
 
 const char PROMPT[] = "> ";
 const char RESULT[] = ":";

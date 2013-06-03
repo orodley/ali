@@ -10,5 +10,6 @@ struct Token {
 };
 
 struct LispObj *read_from_string(char str[]);
+struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf);
 struct LispObj *read_from_stream(FILE *stream);
 struct Token    get_token();
