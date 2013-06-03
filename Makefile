@@ -1,5 +1,3 @@
-CFLAGS =
-
 ifdef DEBUG
 	CFLAGS+=-g
 endif
