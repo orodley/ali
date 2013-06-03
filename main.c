@@ -2,6 +2,7 @@
 #include "read.h"
 #include "types.h"
 #include "print.h"
+#include "lexer.h"
 
 const char PROMPT[] = "> ";
 const char RESULT[] = ":";
@@ -9,6 +10,9 @@ const char RESULT[] = ":";
 int main(int argc, char *argv[])
 {
 	struct LispObj *obj;
+
+	/* Stop yylex() from printing anything */
+	yyout = fopen("/dev/null", "r");
 
 	for (;;) {
 		fputs(PROMPT, stdout);
