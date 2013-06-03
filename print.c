@@ -19,13 +19,30 @@ void prin1(struct LispObj *obj)
 		case CHAR:
 			printf("#\\%c",  obj->value.l_char);
 			break;
-		case CONS:
+		case CONS: {
+			struct Cons *cons = obj->value.l_cons;
 			putchar('(');
-			prin1(obj->value.l_cons->car);
-			fputs(" . ", stdout);
-			prin1(obj->value.l_cons->cdr);
+			prin1(cons->car);
+
+			for (;;) {
+				enum LispType type = cons->cdr->type;
+
+				if (type == NIL)
+					break;
+				if (type != CONS) {
+					fputs(" . ", stdout);
+					prin1(cons->cdr);
+					break;
+				}
+
+				cons = cons->cdr->value.l_cons;
+				putchar(' ');
+				prin1(cons->car);
+			}
+
 			putchar(')');
 			break;
+		}
 		case NIL:
 			fputs("()", stdout);
 			break;
