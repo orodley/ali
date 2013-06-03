@@ -6,23 +6,30 @@
 /* Print an object such that reading it will produce the same object */
 void prin1(struct LispObj *obj)
 {
-	char *format;
-
 	switch(obj->type) {
 		case INT:
-			format = "%d";
+			printf("%d",     obj->value.l_int);
 			break;
 		case STRING:
-			format = "\"%s\""; /* TODO: Escape chars */
+			printf("\"%s\"", obj->value.l_string); /* TODO: Escape chars */
 			break;
 		case SYMBOL:
-			format = "%s";
+			printf("%s",     obj->value.l_symbol);
 			break;
 		case CHAR:
-			format = "#\\%c";
+			printf("#\\%c",  obj->value.l_char);
+			break;
+		case CONS:
+			putchar('(');
+			prin1(obj->value.l_cons->car);
+			fputs(" . ", stdout);
+			prin1(obj->value.l_cons->cdr);
+			putchar(')');
+			break;
+		case NIL:
+			fputs("()", stdout);
+			break;
 	}
-
-	printf(format, obj->value);
 }
 
 /* Like prin1, but preceded by a space and followed by a newline */
