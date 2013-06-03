@@ -5,6 +5,8 @@ enum ErrorCode
 	UNBOUND_VAR,
 };
 
+typedef struct LispObj *(*BuiltinFunction)(int argc, struct LispObj *argv[]);
+
 struct LispObj {
 	union {
 		int               l_int;
@@ -12,7 +14,7 @@ struct LispObj {
 		char             *l_string;
 		char             *l_symbol;
 		struct Cons      *l_cons;
-		struct LispObj *(*l_function)(int argc, struct LispObj *argv[]);
+		BuiltinFunction   l_function;
 		enum ErrorCode l_err;
 	} value;
 
@@ -28,6 +30,7 @@ struct LispObj *make_int(int x);
 struct LispObj *make_char(char c);
 struct LispObj *make_string(char *str);
 struct LispObj *make_symbol(char *str);
+struct LispObj *make_function(BuiltinFunction func);
 struct LispObj *make_error(enum ErrorCode err);
 struct LispObj *make_cons(struct Cons *c_cons);
 struct LispObj *get_nil();

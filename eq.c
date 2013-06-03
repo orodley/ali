@@ -12,8 +12,8 @@ int eq(struct LispObj *obj1, struct LispObj *obj2)
 		case CHAR:
 			return obj1->value.l_char == obj2->value.l_char;
 		case STRING:
-			return strcmp(obj1->value.l_string, obj2->value.l_string);
+			return strcmp(obj1->value.l_string, obj2->value.l_string) == 0;
 		case SYMBOL:
-			return strcmp(obj1->value.l_symbol, obj2->value.l_symbol);
+			return strcmp(obj1->value.l_symbol, obj2->value.l_symbol) == 0;
 	}
 }

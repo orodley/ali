@@ -43,6 +43,16 @@ struct LispObj *make_symbol(char *str)
 	return symbol;
 }
 
+struct LispObj *make_function(BuiltinFunction func)
+{
+	struct LispObj *function = malloc(sizeof(struct LispObj));
+
+	function->type             = FUNCTION;
+	function->value.l_function = func;
+
+	return function;
+}
+
 struct LispObj *make_error(enum ErrorCode err)
 {
 	struct LispObj *error = malloc(sizeof(struct LispObj));

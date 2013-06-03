@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "types.h"
 #include "eq.h"
+#include "builtins.h"
 #include "eval.h"
 
 struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
@@ -30,5 +31,3 @@ struct LispObj *lookup(struct LispObj *symbol, struct Env *env)
 	else
 		return lookup(symbol, env->next);
 }
-
-struct Env *init_env = NULL;

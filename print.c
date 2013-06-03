@@ -21,7 +21,8 @@ void prin1(struct LispObj *obj)
 			printf("#\\%c",  obj->value.l_char);
 			break;
 		case FUNCTION:
-			printf("#<function object at 0x%X>", obj->value.l_function);
+			printf("#<function object at %p>", obj->value.l_function);
+			break;
 		case CONS: {
 			struct Cons *cons = obj->value.l_cons;
 			putchar('(');
