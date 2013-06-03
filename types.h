@@ -1,4 +1,4 @@
-enum LispType { INT, CHAR, STRING, SYMBOL, CONS, NIL, ERROR };
+enum LispType { INT, CHAR, STRING, SYMBOL, CONS, NIL, FUNCTION, ERROR };
 enum ErrorCode
 {
 	UNMATCHED_CLOSE_PAREN,
@@ -7,11 +7,12 @@ enum ErrorCode
 
 struct LispObj {
 	union {
-		int          l_int;
-		char         l_char;
-		char        *l_string;
-		char        *l_symbol;
-		struct Cons *l_cons;
+		int               l_int;
+		char              l_char;
+		char             *l_string;
+		char             *l_symbol;
+		struct Cons      *l_cons;
+		struct LispObj *(*l_function)(int argc, struct LispObj *argv[]);
 		enum ErrorCode l_err;
 	} value;
 
