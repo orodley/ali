@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 		if (obj == NULL) /* EOF */
 			break;
 
-		value = eval(obj);
+		value = eval(obj, init_env);
 
 		fputs(RESULT, stdout);
 		print(value);

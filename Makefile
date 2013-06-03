@@ -4,8 +4,9 @@ ifdef DEBUG
 	CFLAGS+=-g
 endif
 
-ali: main.o cons.o read.o print.o types.o lexer.o eval.o
-	cc $(CFLAGS) -o ali main.o cons.o read.o print.o types.o lexer.o eval.o
+ali: main.o cons.o read.o print.o types.o lexer.o eval.o eq.o
+	cc $(CFLAGS) -o ali main.o cons.o read.o print.o types.o lexer.o eval.o \
+		eq.o
 
 main.o:  main.c read.h types.h lexer.h eval.h
 	cc $(CFLAGS) -c main.c
@@ -17,8 +18,10 @@ print.o: print.c types.h
 	cc $(CFLAGS) -c print.c
 types.o: types.c types.h
 	cc $(CFLAGS) -c types.c
-eval.o:  types.h eval.h
+eval.o:  types.h eval.h eq.h
 	cc $(CFLAGS) -c eval.c
+eq.o:    types.h
+	cc $(CFLAGS) -c eq.c
 lexer.o: lexer.c
 	cc $(CFLAGS) -c lexer.c
 lexer.h: lexer.c
