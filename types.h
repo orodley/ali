@@ -24,6 +24,7 @@ struct Cons {
 };
 
 struct LispObj *make_int(int x);
+struct LispObj *make_char(char c);
 struct LispObj *make_string(char *str);
 struct LispObj *make_symbol(char *str);
 struct LispObj *make_error(enum ErrorCode err);

@@ -43,6 +43,12 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 			free(token.str);
 			return make_int(x);
 		}
+		case T_CHAR: {
+			char c = token.str[2]; /* TODO: name-char reading */
+
+			free(token.str);
+			return make_char(c);
+		}
 		case T_STRING: {
 			int len = strlen(token.str);
 

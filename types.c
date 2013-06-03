@@ -13,6 +13,16 @@ struct LispObj *make_int(int x)
 	return num;
 }
 
+struct LispObj *make_char(char c)
+{
+	struct LispObj *character = malloc(sizeof(struct LispObj));
+
+	character->type         = CHAR;
+	character->value.l_char = c;
+
+	return character;
+}
+
 struct LispObj *make_string(char *str)
 {
 	struct LispObj *string = malloc(sizeof(struct LispObj));

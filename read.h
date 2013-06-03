@@ -1,7 +1,7 @@
 enum TokenType {
 	/* Start the enum from 1, to avoid a clash with the EOF value */
 	T_OPEN_PAREN = 1, T_CLOSE_PAREN = 2, T_STRING = 3,
-	T_SYMBOL     = 4, T_INTEGER     = 5
+	T_SYMBOL     = 4, T_INTEGER     = 5, T_CHAR   = 6
 };
 
 struct Token {

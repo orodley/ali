@@ -8,6 +8,7 @@ INTEGER	-?[0-9]+
 /* TODO: more acceped symbol chars */
 SYMBOL	[a-zA-Z][a-zA-Z0-9]*
 STRING	\"(\\.|[^"\n\\])*\"
+CHAR	#\\[a-zA-Z_]+
 
 %%
 
@@ -16,4 +17,5 @@ STRING	\"(\\.|[^"\n\\])*\"
 {STRING}	{ return T_STRING;      }
 {SYMBOL}	{ return T_SYMBOL;      }
 {INTEGER}	{ return T_INTEGER;     }
+{CHAR}		{ return T_CHAR;		}
 [:space:]	{ yyless(1);            }
