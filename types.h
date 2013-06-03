@@ -2,6 +2,7 @@ enum LispType { INT, CHAR, STRING, SYMBOL, CONS, NIL, ERROR };
 enum ErrorCode
 {
 	UNMATCHED_CLOSE_PAREN,
+	UNBOUND_VAR,
 };
 
 struct LispObj {

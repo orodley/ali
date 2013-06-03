@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include "types.h"
+#include "print.h"
 
 /* Print an object such that reading it will produce the same object */
 void prin1(struct LispObj *obj)
@@ -45,6 +46,23 @@ void prin1(struct LispObj *obj)
 		}
 		case NIL:
 			fputs("()", stdout);
+			break;
+		case ERROR:
+			print_error(obj->value.l_err);
+	}
+}
+
+/* TODO: Better error reporting, e.g. rather than just printing "Unbound
+ * variable", tell the user *which* variable is unbound */
+void print_error(enum ErrorCode err)
+{
+	fputs("ERROR: ", stdout);
+	switch (err) {
+		case UNMATCHED_CLOSE_PAREN:
+			fputs("Unmatched close parenthesis.", stdout);
+			break;
+		case UNBOUND_VAR:
+			fputs("Unbound variable.", stdout);
 			break;
 	}
 }

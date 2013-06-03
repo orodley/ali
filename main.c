@@ -3,13 +3,14 @@
 #include "print.h"
 #include "lexer.h"
 #include "read.h"
+#include "eval.h"
 
 const char PROMPT[] = "> ";
 const char RESULT[] = ":";
 
 int main(int argc, char *argv[])
 {
-	struct LispObj *obj;
+	struct LispObj *obj, *value;
 
 	/* Stop yylex() from printing anything */
 	yyout = fopen("/dev/null", "r");
@@ -21,8 +22,10 @@ int main(int argc, char *argv[])
 		if (obj == NULL) /* EOF */
 			break;
 
+		value = eval(obj);
+
 		fputs(RESULT, stdout);
-		print(obj);
+		print(value);
 
 		free_lisp_obj(obj);
 	}
