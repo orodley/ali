@@ -4,11 +4,11 @@
 
 %option noyywrap
 
-INTEGER	-?[0-9]+
-/* TODO: more acceped symbol chars */
-SYMBOL	[a-zA-Z][a-zA-Z0-9]*
-STRING	\"(\\.|[^"\n\\])*\"
-CHAR	#\\[a-zA-Z_]+
+INTEGER		-?[0-9]+
+SYMBOL_CHAR	[a-zA-Z+\-\^.*/<=>!?$%_&~]
+SYMBOL		{SYMBOL_CHAR}({SYMBOL_CHAR}|[0-9])*
+STRING		\"(\\.|[^"\n\\])*\"
+CHAR		#\\[a-zA-Z_]+
 
 %%
 
