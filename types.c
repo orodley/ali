@@ -33,6 +33,16 @@ struct LispObj *make_symbol(char *str)
 	return symbol;
 }
 
+struct LispObj *make_error(enum ErrorCode err)
+{
+	struct LispObj *error = malloc(sizeof(struct LispObj));
+
+	error->type        = ERROR;
+	error->value.l_err = err;
+
+	return error;
+}
+
 struct LispObj* nil;
 
 struct LispObj *get_nil()
