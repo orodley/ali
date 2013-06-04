@@ -50,7 +50,7 @@ static BuiltinFunction functions[] = {
 
 struct Env *get_init_env()
 {
-	struct Env *init_env, *prev_env = NULL;
+	struct Env *init_env = NULL, *prev_env = NULL;
 	int num_builtins = (sizeof(names) / sizeof(*names));
 
 	for (int i = 0; i < num_builtins; i++)
