@@ -25,8 +25,8 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 		case CONS: {
 			struct LispObj *func = eval(sexpr->value.l_cons->car, env);
 
-			if (func == NULL)
-				return make_error(UNBOUND_VAR);
+			if (func->type == ERROR)
+				return func;
 			if (func->type != FUNCTION)
 				return make_error(NOT_A_FUNCTION);
 
