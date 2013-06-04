@@ -1,8 +1,10 @@
 CFLAGS = -std=c99
 
-ifdef DEBUG
-	CFLAGS+=-g
-endif
+.PHONY: all
+all: ali
+
+debug: CFLAGS += -g
+debug: ali
 
 ali: main.o cons.o read.o print.o types.o lexer.o eval.o eq.o builtins.o
 	cc $(CFLAGS) -o ali main.o cons.o read.o print.o types.o lexer.o eval.o \
