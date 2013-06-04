@@ -67,6 +67,9 @@ void print_error(enum ErrorCode err)
 		case UNBOUND_VAR:
 			fputs("Unbound variable.", stdout);
 			break;
+		case NOT_A_FUNCTION:
+			fputs("Non-function found where a function was expected", stdout);
+			break;
 	}
 }
 

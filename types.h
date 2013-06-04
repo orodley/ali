@@ -3,6 +3,7 @@ enum ErrorCode
 {
 	UNMATCHED_CLOSE_PAREN,
 	UNBOUND_VAR,
+	NOT_A_FUNCTION,
 };
 
 typedef struct LispObj *(*BuiltinFunction)(int argc, struct LispObj *argv[]);
@@ -15,7 +16,7 @@ struct LispObj {
 		char             *l_symbol;
 		struct Cons      *l_cons;
 		BuiltinFunction   l_function;
-		enum ErrorCode l_err;
+		enum ErrorCode    l_err;
 	} value;
 
 	enum LispType type;
