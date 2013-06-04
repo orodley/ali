@@ -13,6 +13,16 @@ struct LispObj *make_int(int x)
 	return num;
 }
 
+struct LispObj *make_bool(int b)
+{
+	struct LispObj *bool = malloc(sizeof(struct LispObj));
+
+	bool->type         = BOOL;
+	bool->value.l_bool = (b ? 1 : 0);
+
+	return bool;
+}
+
 struct LispObj *make_char(char c)
 {
 	struct LispObj *character = malloc(sizeof(struct LispObj));

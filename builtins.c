@@ -49,17 +49,31 @@ static BuiltinFunction functions[] = {
 
 struct Env *get_init_env()
 {
-	struct Env *init_env = NULL;
-	int num_builtins = sizeof(names) / sizeof(*names);
+	struct Env *init_env, *prev_env = NULL;
+	int num_builtins = (sizeof(names) / sizeof(*names));
 
 	for (int i = 0; i < num_builtins; i++) {
-		struct Env *prev_env = init_env;
+		prev_env = init_env;
 		init_env = malloc(sizeof(struct Env));
 
 		init_env->key   = make_symbol(names[i]);
 		init_env->value = make_function(functions[i]);
-		init_env->next = prev_env;
+		init_env->next  = prev_env;
 	}
+
+	prev_env = init_env;
+	init_env = malloc(sizeof(struct Env));
+
+	init_env->key   = make_symbol("t");
+	init_env->value = make_bool(1);
+	init_env->next  = prev_env;
+
+	prev_env = init_env;
+	init_env = malloc(sizeof(struct Env));
+
+	init_env->key   = make_symbol("f");
+	init_env->value = make_bool(0);
+	init_env->next  = prev_env;
 
 	return init_env;
 }

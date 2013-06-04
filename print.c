@@ -11,6 +11,9 @@ void prin1(struct LispObj *obj)
 		case INT:
 			printf("%d",     obj->value.l_int);
 			break;
+		case BOOL:
+			putchar(obj->value.l_int ? 't' : 'f');
+			break;
 		case STRING:
 			printf("\"%s\"", obj->value.l_string); /* TODO: Escape chars */
 			break;
