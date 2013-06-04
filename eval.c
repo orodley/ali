@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "types.h"
 #include "eq.h"
 #include "builtins.h"
@@ -23,6 +24,10 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 				return value;
 		}
 		case CONS: {
+			struct LispObj *result = eval_special_form(sexpr, env);
+			if (result != NULL) /* It was a special form */
+				return result;
+
 			struct LispObj *func = eval(sexpr->value.l_cons->car, env);
 
 			if (func->type == ERROR)
@@ -41,9 +46,21 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 				args[i] = eval(sexpr->value.l_cons->car, env);
 			}
 
-			struct LispObj *result = func->value.l_function(argc, args);
+			result = func->value.l_function(argc, args);
 			free(args);
 			return result;
 		}
 	}
+}
+
+struct LispObj *eval_special_form(struct LispObj *sexpr, struct Env *env)
+{
+	char *name = sexpr->value.l_cons->car->value.l_symbol;
+
+	if (strcmp(name, "quote") == 0) {
+		/* Return the CADR of the form */
+		return sexpr->value.l_cons->cdr->value.l_cons->car;
+	}
+
+	return NULL; /* NULL signifies that it didn't match any special form */
 }
