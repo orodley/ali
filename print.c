@@ -70,6 +70,9 @@ void print_error(enum ErrorCode err)
 		case NOT_A_FUNCTION:
 			fputs("Non-function found where a function was expected", stdout);
 			break;
+		case WRONG_ARGC:
+			fputs("Wrong number of arguments", stdout);
+			break;
 	}
 }
 

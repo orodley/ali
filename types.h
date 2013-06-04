@@ -4,6 +4,7 @@ enum ErrorCode
 	UNMATCHED_CLOSE_PAREN,
 	UNBOUND_VAR,
 	NOT_A_FUNCTION,
+	WRONG_ARGC,
 };
 
 typedef struct LispObj *(*BuiltinFunction)(int argc, struct LispObj *argv[]);
