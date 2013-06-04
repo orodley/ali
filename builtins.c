@@ -53,28 +53,12 @@ struct Env *get_init_env()
 	struct Env *init_env, *prev_env = NULL;
 	int num_builtins = (sizeof(names) / sizeof(*names));
 
-	for (int i = 0; i < num_builtins; i++) {
-		prev_env = init_env;
-		init_env = malloc(sizeof(struct Env));
+	for (int i = 0; i < num_builtins; i++)
+		init_env = extend(init_env, make_symbol(names[i]),
+				make_function(functions[i]));
 
-		init_env->key   = make_symbol(names[i]);
-		init_env->value = make_function(functions[i]);
-		init_env->next  = prev_env;
-	}
-
-	prev_env = init_env;
-	init_env = malloc(sizeof(struct Env));
-
-	init_env->key   = make_symbol("t");
-	init_env->value = make_bool(1);
-	init_env->next  = prev_env;
-
-	prev_env = init_env;
-	init_env = malloc(sizeof(struct Env));
-
-	init_env->key   = make_symbol("f");
-	init_env->value = make_bool(0);
-	init_env->next  = prev_env;
+	init_env = extend(init_env, make_symbol("t"), make_bool(1));
+	init_env = extend(init_env, make_symbol("f"), make_bool(0));
 
 	return init_env;
 }

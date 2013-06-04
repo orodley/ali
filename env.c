@@ -12,3 +12,15 @@ struct LispObj *lookup(struct LispObj *symbol, struct Env *env)
 	else
 		return lookup(symbol, env->next);
 }
+
+struct Env *extend(struct Env *env, struct LispObj *key, struct LispObj *value)
+{
+	struct Env *prev_env = env;
+	env = malloc(sizeof(struct Env));
+
+	env->key   = key;
+	env->value = value;
+	env->next  = prev_env;
+
+	return env;
+}
