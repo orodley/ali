@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
+#include "env.h"
 #include "builtins.h"
 
 BUILTIN_FUNCTION(b_plus)

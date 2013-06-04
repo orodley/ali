@@ -2,6 +2,7 @@
 #include "types.h"
 #include "eq.h"
 #include "builtins.h"
+#include "env.h"
 #include "eval.h"
 
 struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
@@ -45,14 +46,4 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 			return result;
 		}
 	}
-}
-
-struct LispObj *lookup(struct LispObj *symbol, struct Env *env)
-{
-	if (env == NULL)
-		return NULL;
-	else if (eq(symbol, env->key))
-		return env->value;
-	else
-		return lookup(symbol, env->next);
 }
