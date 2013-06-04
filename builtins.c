@@ -29,11 +29,22 @@ BUILTIN_FUNCTION(b_minus)
 	return make_int(result);
 }
 
+BUILTIN_FUNCTION(b_multiply)
+{
+	int result = 1;
+
+	for (int i = 0; i < argc; i++) {
+		result *= argv[i]->value.l_int;
+	}
+
+	return make_int(result);
+}
+
 static char *names[] = {
-	"+",    "-"
+	"+",    "-",     "*"
 };
 static BuiltinFunction functions[] = {
-	b_plus, b_minus
+	b_plus, b_minus, b_multiply
 };
 
 struct Env *get_init_env()
