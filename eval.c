@@ -56,11 +56,25 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 
 struct LispObj *eval_special_form(struct LispObj *sexpr, struct Env *env)
 {
-	char *name = sexpr->value.l_cons->car->value.l_symbol;
+	char *name = car(sexpr)->value.l_symbol;
 
 	if (strcmp(name, "quote") == 0) {
 		/* Return the CADR of the form */
 		return cadr(sexpr);
+	} else if (strcmp(name, "if") == 0) {
+		struct LispObj *f         = make_bool(0);
+		struct LispObj *condition = eval(cadr(sexpr), env);
+
+		struct LispObj *result_form;
+		if (eq(f, condition))
+			result_form = cadr(cddr(sexpr)); /* false */
+		else
+			result_form = cadr(cdr(sexpr));  /* true */
+
+		free_lisp_obj(f);
+		free_lisp_obj(condition);
+
+		return eval(result_form, env);
 	}
 
 	return NULL; /* NULL signifies that it didn't match any special form */
