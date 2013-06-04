@@ -12,3 +12,18 @@ struct Cons *cons(struct LispObj *car, struct LispObj *cdr)
 
 	return new_cons;
 }
+
+struct LispObj *car(struct LispObj *cons)
+{
+	return cons->value.l_cons->car;
+}
+
+struct LispObj *cdr(struct LispObj *cons)
+{
+	return cons->value.l_cons->cdr;
+}
+
+struct LispObj *caar(struct LispObj *cons) { return car(car(cons)); }
+struct LispObj *cadr(struct LispObj *cons) { return car(cdr(cons)); }
+struct LispObj *cdar(struct LispObj *cons) { return cdr(car(cons)); }
+struct LispObj *cddr(struct LispObj *cons) { return cdr(cdr(cons)); }

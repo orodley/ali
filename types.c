@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "types.h"
+#include "cons.h"
 
 /* Type-related functions */
 
@@ -111,8 +112,8 @@ void free_lisp_obj(struct LispObj *obj)
 			free(obj->value.l_symbol);
 			break;
 		case CONS:
-			free_lisp_obj(obj->value.l_cons->car);
-			free_lisp_obj(obj->value.l_cons->cdr);
+			free_lisp_obj(car(obj));
+			free_lisp_obj(cdr(obj));
 			break;
 	}
 

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include "types.h"
+#include "cons.h"
 #include "print.h"
 
 /* Print an object such that reading it will produce the same object */
@@ -27,24 +28,23 @@ void prin1(struct LispObj *obj)
 			printf("#<function object at %p>", obj->value.l_function);
 			break;
 		case CONS: {
-			struct Cons *cons = obj->value.l_cons;
 			putchar('(');
-			prin1(cons->car);
+			prin1(car(obj));
 
 			for (;;) {
-				enum LispType type = cons->cdr->type;
+				enum LispType type = cdr(obj)->type;
 
 				if (type == NIL)
 					break;
 				if (type != CONS) {
 					fputs(" . ", stdout);
-					prin1(cons->cdr);
+					prin1(cdr(obj));
 					break;
 				}
 
-				cons = cons->cdr->value.l_cons;
+				obj = cdr(obj);
 				putchar(' ');
-				prin1(cons->car);
+				prin1(car(obj));
 			}
 
 			putchar(')');

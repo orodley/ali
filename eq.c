@@ -9,6 +9,8 @@ int eq(struct LispObj *obj1, struct LispObj *obj2)
 	switch (obj1->type) {
 		case INT:
 			return obj1->value.l_int  == obj2->value.l_int;
+		case BOOL:
+			return obj1->value.l_bool == obj2->value.l_bool;
 		case CHAR:
 			return obj1->value.l_char == obj2->value.l_char;
 		case STRING:

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
+#include "cons.h"
 #include "eq.h"
 #include "builtins.h"
 #include "env.h"
@@ -28,7 +29,7 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 			if (result != NULL) /* It was a special form */
 				return result;
 
-			struct LispObj *func = eval(sexpr->value.l_cons->car, env);
+			struct LispObj *func = eval(car(sexpr), env);
 
 			if (func->type == ERROR)
 				return func;
@@ -37,13 +38,13 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 
 			int argc = 0;
 			struct LispObj *s = sexpr;
-			for (; s->value.l_cons->cdr->type != NIL; argc++)
-				s = s->value.l_cons->cdr;
+			for (; cdr(s)->type != NIL; argc++)
+				s = cdr(s);
 
 			struct LispObj **args = malloc(sizeof(struct LispObj*) * argc);
 			for (int i = 0; i < argc; i++) {
-				sexpr = sexpr->value.l_cons->cdr;
-				args[i] = eval(sexpr->value.l_cons->car, env);
+				sexpr = cdr(sexpr);
+				args[i] = eval(car(sexpr), env);
 			}
 
 			result = func->value.l_function(argc, args);
@@ -59,7 +60,7 @@ struct LispObj *eval_special_form(struct LispObj *sexpr, struct Env *env)
 
 	if (strcmp(name, "quote") == 0) {
 		/* Return the CADR of the form */
-		return sexpr->value.l_cons->cdr->value.l_cons->car;
+		return cadr(sexpr);
 	}
 
 	return NULL; /* NULL signifies that it didn't match any special form */
