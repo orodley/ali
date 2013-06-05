@@ -40,5 +40,5 @@ int main(int argc, char *argv[])
 
 	fclose(yyout);
 
-	return 1;
+	return 0;
 }
