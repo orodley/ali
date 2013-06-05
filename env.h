@@ -8,3 +8,4 @@ struct Env {
 
 struct LispObj *lookup(struct LispObj *symbol, struct Env *env);
 struct Env *extend(struct Env *env, struct LispObj *key, struct LispObj *value);
+void free_env(struct Env *env);

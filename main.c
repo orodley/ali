@@ -5,6 +5,7 @@
 #include "read.h"
 #include "builtins.h"
 #include "eval.h"
+#include "env.h"
 
 const char PROMPT[] = "> ";
 const char RESULT[] = ":";
@@ -33,5 +34,11 @@ int main(int argc, char *argv[])
 	}
 
 	putchar('\n');
+
+	free_env(init_env);
+	free_nil();
+
+	fclose(yyout);
+
 	return 1;
 }

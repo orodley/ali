@@ -41,24 +41,15 @@ BUILTIN_FUNCTION(b_multiply)
 	return make_int(result);
 }
 
-static char *names[] = {
-	"+",    "-",     "*"
-};
-static BuiltinFunction functions[] = {
-	b_plus, b_minus, b_multiply
-};
-
 struct Env *get_init_env()
 {
-	struct Env *init_env = NULL, *prev_env = NULL;
-	int num_builtins = (sizeof(names) / sizeof(*names));
+	struct Env *env = NULL;
 
-	for (int i = 0; i < num_builtins; i++)
-		init_env = extend(init_env, make_symbol(names[i]),
-				make_function(functions[i]));
+	env = extend(env, make_symbol_cpy("+"), make_function(b_plus));
+	env = extend(env, make_symbol_cpy("-"), make_function(b_minus));
+	env = extend(env, make_symbol_cpy("*"), make_function(b_multiply));
+	env = extend(env, make_symbol_cpy("t"), make_bool(1));
+	env = extend(env, make_symbol_cpy("f"), make_bool(0));
 
-	init_env = extend(init_env, make_symbol("t"), make_bool(1));
-	init_env = extend(init_env, make_symbol("f"), make_bool(0));
-
-	return init_env;
+	return env;
 }

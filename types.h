@@ -34,9 +34,12 @@ struct LispObj *make_bool(int b);
 struct LispObj *make_char(char c);
 struct LispObj *make_string(char *str);
 struct LispObj *make_symbol(char *str);
+struct LispObj *make_symbol_cpy(char *str);
 struct LispObj *make_function(BuiltinFunction func);
 struct LispObj *make_error(enum ErrorCode err);
 struct LispObj *make_cons(struct Cons *c_cons);
+
 struct LispObj *get_nil();
+void free_nil();
 
 void free_lisp_obj(struct LispObj *obj);

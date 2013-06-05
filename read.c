@@ -62,24 +62,20 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 			return make_string(str);
 		}
 		case T_SYMBOL: {
-			int len = strlen(token.str);
-
-			char *str = malloc(sizeof(char) * len);
-			strncpy(str, token.str, len);
-			*(str + len) = '\0';
-
-			free(token.str);
-			return make_symbol(str);
+			return make_symbol(token.str);
 		}
 		case T_OPEN_PAREN: {
+			free(token.str);
 			struct LispObj *car = read_from_yybuf(yy_buf);
 
 			if (car == NULL) /* Unmatched open parenthesis */
 				return NULL; /* TODO: Error handling/reporting */
 
 			if ((car->type == ERROR) &&
-					(car->value.l_err == UNMATCHED_CLOSE_PAREN))
+					(car->value.l_err == UNMATCHED_CLOSE_PAREN)) {
+				free_lisp_obj(car);
 				return get_nil();
+			}
 
 			struct Cons *curr_cons = cons(car, get_nil());
 			struct LispObj *list = make_cons(curr_cons);
@@ -90,8 +86,10 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 				if (car == NULL)
 					return NULL;
 				if ((car->type == ERROR) &&
-						(car->value.l_err == UNMATCHED_CLOSE_PAREN))
+						(car->value.l_err == UNMATCHED_CLOSE_PAREN)) {
+					free_lisp_obj(car);
 					break;
+				}
 
 				curr_cons->cdr = make_cons(cons(car, get_nil()));
 				curr_cons = curr_cons->cdr->value.l_cons;
@@ -100,6 +98,7 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 			return list;
 		}
 		case T_CLOSE_PAREN:
+			free(token.str);
 			return make_error(UNMATCHED_CLOSE_PAREN);
 	}
 }
@@ -110,7 +109,7 @@ struct Token get_token()
 	enum TokenType type = yylex();
 
 	if (type != 0) {
-		str = malloc(sizeof(char) * strlen(yytext));
+		str = malloc(sizeof(char) * strlen(yytext) + 1);
 		strcpy(str, yytext);
 	}
 

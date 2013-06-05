@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "types.h"
 #include "cons.h"
 
@@ -54,6 +55,25 @@ struct LispObj *make_symbol(char *str)
 	return symbol;
 }
 
+/* KLUDGE: When the symbols in an Env are eventually freed, free_lisp_obj
+ * will try to free the memory allocated for the string. If they are
+ * statically allocated, this will fail. Since free_lisp_obj has no way
+ * of telling whether the string is statically allocated, we need to
+ * dynamically allocate them all */
+struct LispObj *make_symbol_cpy(char *str)
+{
+	int str_len = strlen(str);
+	char *str_cpy = malloc(sizeof(char) * str_len + 1);
+	strcpy(str_cpy, str);
+
+	struct LispObj *symbol = malloc(sizeof(struct LispObj));
+
+	symbol->type           = SYMBOL;
+	symbol->value.l_symbol = str_cpy;
+
+	return symbol;
+}
+
 struct LispObj *make_function(BuiltinFunction func)
 {
 	struct LispObj *function = malloc(sizeof(struct LispObj));
@@ -86,6 +106,12 @@ struct LispObj *get_nil()
 	return nil;
 }
 
+/* This should only be called just before the program exits */
+void free_nil()
+{
+	free(nil);
+}
+
 struct LispObj *make_cons(struct Cons *c_cons)
 {
 	struct LispObj *lo_cons = malloc(sizeof(struct LispObj));
@@ -103,7 +129,10 @@ void free_lisp_obj(struct LispObj *obj)
 		case NIL:
 			return; /* NIL sticks around */
 		case INT:
+		case BOOL:
 		case CHAR:
+		case ERROR:
+		case FUNCTION:
 			break;
 		case STRING:
 			free(obj->value.l_string);
@@ -114,6 +143,7 @@ void free_lisp_obj(struct LispObj *obj)
 		case CONS:
 			free_lisp_obj(car(obj));
 			free_lisp_obj(cdr(obj));
+			free(obj->value.l_cons);
 			break;
 	}
 

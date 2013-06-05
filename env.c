@@ -24,3 +24,16 @@ struct Env *extend(struct Env *env, struct LispObj *key, struct LispObj *value)
 
 	return env;
 }
+
+void free_env(struct Env *env)
+{
+	if (env == NULL)
+		return;
+
+	free_lisp_obj(env->key);
+	free_lisp_obj(env->value);
+
+	struct Env *next = env->next;
+	free(env);
+	free_env(next); /* Call free_env last to make it tail-recursive */
+}

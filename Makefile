@@ -11,7 +11,7 @@ ali: main.o cons.o read.o print.o types.o lexer.o eval.o eq.o builtins.o \
 	cc $(CFLAGS) -o ali main.o cons.o read.o print.o types.o lexer.o eval.o \
 		eq.o builtins.o env.o
 
-main.o:     main.c read.h types.h lexer.h eval.h builtins.h
+main.o:     main.c read.h types.h lexer.h eval.h builtins.h env.h
 	cc $(CFLAGS) -c main.c
 cons.o:     cons.c types.h
 	cc $(CFLAGS) -c cons.c
