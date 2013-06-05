@@ -45,9 +45,12 @@ struct Env *get_init_env()
 {
 	struct Env *env = NULL;
 
-	env = extend(env, make_symbol_cpy("+"), make_function(b_plus));
-	env = extend(env, make_symbol_cpy("-"), make_function(b_minus));
-	env = extend(env, make_symbol_cpy("*"), make_function(b_multiply));
+	/* Builtin functions */
+	env = extend_func(env, "+", b_plus);
+	env = extend_func(env, "-", b_minus);
+	env = extend_func(env, "*", b_multiply);
+
+	/* Boolean values */
 	env = extend(env, make_symbol_cpy("t"), make_bool(1));
 	env = extend(env, make_symbol_cpy("f"), make_bool(0));
 
