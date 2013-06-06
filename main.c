@@ -29,8 +29,6 @@ int main(int argc, char *argv[])
 
 		fputs(RESULT, stdout);
 		print(value);
-
-		free_lisp_obj(obj);
 	}
 
 	putchar('\n');

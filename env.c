@@ -30,6 +30,18 @@ struct Env *extend_func(struct Env *env, char *name, BuiltinFunction func)
 	return extend(env, make_symbol_cpy(name), make_function(func));
 }
 
+void extend_in_place(struct Env *env, struct LispObj *key, struct LispObj *value)
+{
+	struct Env *new_env = malloc(sizeof(struct Env));
+	new_env->key   = env->key;
+	new_env->value = env->value;
+	new_env->next  = env->next;
+
+	env->key   = key;
+	env->value = value;
+	env->next  = new_env;
+}
+
 void free_env(struct Env *env)
 {
 	if (env == NULL)

@@ -5,6 +5,7 @@ enum ErrorCode
 	UNBOUND_VAR,
 	NOT_A_FUNCTION,
 	WRONG_ARGC,
+	NAME_NOT_A_SYMBOL,
 };
 
 typedef struct LispObj *(*BuiltinFunction)(int argc, struct LispObj *argv[]);
