@@ -46,10 +46,19 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 			struct LispObj **args = malloc(sizeof(struct LispObj*) * argc);
 			for (int i = 0; i < argc; i++) {
 				sexpr = cdr(sexpr);
-				args[i] = eval(car(sexpr), env);
+
+				struct LispObj *arg = eval(car(sexpr), env);
+				if (arg->type == ERROR) {
+					result = arg; /* Propagate errors */
+					goto cleanup;
+				}
+
+				args[i] = arg;
 			}
 
 			result = func->value.l_function(argc, args, env);
+
+cleanup:
 			free(args);
 			return result;
 		}
