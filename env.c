@@ -22,6 +22,9 @@ struct Env *extend(struct Env *env, struct LispObj *key, struct LispObj *value)
 	env->value = value;
 	env->next  = prev_env;
 
+	key  ->refc++;
+	value->refc++;
+
 	return env;
 }
 
@@ -40,6 +43,9 @@ void extend_in_place(struct Env *env, struct LispObj *key, struct LispObj *value
 	env->key   = key;
 	env->value = value;
 	env->next  = new_env;
+
+	key  ->refc++;
+	value->refc++;
 }
 
 void free_env(struct Env *env)

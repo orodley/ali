@@ -5,6 +5,9 @@
  * a pointer to it */
 struct Cons *cons(struct LispObj *car, struct LispObj *cdr)
 {
+	car->refc++;
+	cdr->refc++;
+
 	struct Cons *new_cons = malloc(sizeof(struct Cons));
 	
 	new_cons->car = car;

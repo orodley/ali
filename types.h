@@ -23,6 +23,7 @@ struct LispObj {
 	} value;
 
 	enum LispType type;
+	int  refc;
 };
 
 struct Cons {
@@ -40,7 +41,10 @@ struct LispObj *make_function(BuiltinFunction func);
 struct LispObj *make_error(enum ErrorCode err);
 struct LispObj *make_cons(struct Cons *c_cons);
 
+void add_ref(struct LispObj *obj);
+
 struct LispObj *get_nil();
 void free_nil();
 
+void always_free_lisp_obj(struct LispObj *obj);
 void free_lisp_obj(struct LispObj *obj);

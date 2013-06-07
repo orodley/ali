@@ -73,7 +73,7 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 
 			if ((car->type == ERROR) &&
 					(car->value.l_err == UNMATCHED_CLOSE_PAREN)) {
-				free_lisp_obj(car);
+				always_free_lisp_obj(car);
 				return get_nil();
 			}
 
@@ -87,7 +87,7 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 					return NULL;
 				if ((car->type == ERROR) &&
 						(car->value.l_err == UNMATCHED_CLOSE_PAREN)) {
-					free_lisp_obj(car);
+					always_free_lisp_obj(car);
 					break;
 				}
 

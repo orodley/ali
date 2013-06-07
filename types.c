@@ -11,6 +11,7 @@ struct LispObj *make_int(int x)
 
 	num->type        = INT;
 	num->value.l_int = x;
+	num->refc        = 0;
 
 	return num;
 }
@@ -21,6 +22,7 @@ struct LispObj *make_bool(int b)
 
 	bool->type         = BOOL;
 	bool->value.l_bool = (b ? 1 : 0);
+	bool->refc         = 0;
 
 	return bool;
 }
@@ -31,6 +33,7 @@ struct LispObj *make_char(char c)
 
 	character->type         = CHAR;
 	character->value.l_char = c;
+	character->refc         = 0;
 
 	return character;
 }
@@ -41,6 +44,7 @@ struct LispObj *make_string(char *str)
 
 	string->type           = STRING;
 	string->value.l_string = str;
+	string->refc           = 0;
 
 	return string;
 }
@@ -51,6 +55,7 @@ struct LispObj *make_symbol(char *str)
 
 	symbol->type           = SYMBOL;
 	symbol->value.l_symbol = str;
+	symbol->refc           = 0;
 
 	return symbol;
 }
@@ -66,12 +71,7 @@ struct LispObj *make_symbol_cpy(char *str)
 	char *str_cpy = malloc(sizeof(char) * str_len + 1);
 	strcpy(str_cpy, str);
 
-	struct LispObj *symbol = malloc(sizeof(struct LispObj));
-
-	symbol->type           = SYMBOL;
-	symbol->value.l_symbol = str_cpy;
-
-	return symbol;
+	return make_symbol(str_cpy);
 }
 
 struct LispObj *make_function(BuiltinFunction func)
@@ -80,6 +80,7 @@ struct LispObj *make_function(BuiltinFunction func)
 
 	function->type             = FUNCTION;
 	function->value.l_function = func;
+	function->refc             = 0;
 
 	return function;
 }
@@ -90,6 +91,7 @@ struct LispObj *make_error(enum ErrorCode err)
 
 	error->type        = ERROR;
 	error->value.l_err = err;
+	error->refc        = 0;
 
 	return error;
 }
@@ -101,6 +103,7 @@ struct LispObj *get_nil()
 	if (nil == NULL) {
 		nil = malloc(sizeof(struct LispObj));
 		nil->type = NIL;
+		nil->refc = 0;
 	}
 
 	return nil;
@@ -118,14 +121,42 @@ struct LispObj *make_cons(struct Cons *c_cons)
 
 	lo_cons->type         = CONS;
 	lo_cons->value.l_cons = c_cons;
+	lo_cons->refc         = 0;
 
 	return lo_cons;
 }
 
+void add_ref(struct LispObj *obj)
+{
+	switch (obj->type) {
+		case INT:
+		case BOOL:
+		case CHAR:
+		case STRING:
+		case SYMBOL:
+		case FUNCTION:
+		case ERROR:
+			obj->refc++;
+			break;
+		case CONS:
+			obj->refc++;
+			add_ref(car(obj));
+			add_ref(cdr(obj));
+			break;
+		case NIL:
+			break;
+	}
+}
 
 /* Free the memory allocated for a LispObj, and the object in its value slot.
  * If it is a cons, its car and cdr are recursively freed */
 void free_lisp_obj(struct LispObj *obj)
+{
+	if ((--obj->refc <= 0) && (obj->type != NIL))
+		always_free_lisp_obj(obj);
+}
+
+void always_free_lisp_obj(struct LispObj *obj)
 {
 	switch (obj->type) {
 		case NIL:
@@ -143,6 +174,8 @@ void free_lisp_obj(struct LispObj *obj)
 			free(obj->value.l_symbol);
 			break;
 		case CONS:
+			car(obj)->refc--;
+			cdr(obj)->refc--;
 			free_lisp_obj(car(obj));
 			free_lisp_obj(cdr(obj));
 			free(obj->value.l_cons);

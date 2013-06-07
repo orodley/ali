@@ -25,10 +25,15 @@ int main(int argc, char *argv[])
 		if (obj == NULL) /* EOF */
 			break;
 
+		add_ref(obj);
+
 		value = eval(obj, init_env);
+		add_ref(value);
+		free_lisp_obj(obj);
 
 		fputs(RESULT, stdout);
 		print(value);
+		free_lisp_obj(value);
 	}
 
 	putchar('\n');
