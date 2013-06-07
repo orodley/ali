@@ -8,7 +8,10 @@ enum ErrorCode
 	NAME_NOT_A_SYMBOL,
 };
 
-typedef struct LispObj *(*BuiltinFunction)(int argc, struct LispObj *argv[]);
+struct Env;
+
+typedef struct LispObj *(*BuiltinFunction)(int argc, struct LispObj *argv[],
+		struct Env *env);
 
 struct LispObj {
 	union {

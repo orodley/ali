@@ -66,6 +66,17 @@ BUILTIN_FUNCTION(b_cdr)
 	return cdr(argv[0]);
 }
 
+BUILTIN_FUNCTION(b_set)
+{
+	if (argc != 2)
+		return make_error(WRONG_ARGC);
+	if (argv[0]->type != SYMBOL)
+		return make_error(NAME_NOT_A_SYMBOL);
+
+	set(env, argv[0], argv[1]);
+	return argv[1];
+}
+
 struct Env *get_init_env()
 {
 	struct Env *env = NULL;
@@ -77,6 +88,7 @@ struct Env *get_init_env()
 	env = extend_func(env, "cons", b_cons);
 	env = extend_func(env, "car",  b_car);
 	env = extend_func(env, "cdr",  b_cdr);
+	env = extend_func(env, "set",  b_set);
 
 	/* Boolean values */
 	env = extend(env, make_symbol_cpy("t"), make_bool(1));

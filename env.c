@@ -60,3 +60,17 @@ void free_env(struct Env *env)
 	free(env);
 	free_env(next); /* Call free_env last to make it tail-recursive */
 }
+
+void set(struct Env *env, struct LispObj *key, struct LispObj *value)
+{
+	if (env == NULL)
+		return;
+
+	if (eq(key, env->key)) {
+		free_lisp_obj(env->value);
+		env->value = value;
+		value->refc++;
+	} else {
+		set(env->next, key, value);
+	}
+}

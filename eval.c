@@ -49,7 +49,7 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 				args[i] = eval(car(sexpr), env);
 			}
 
-			result = func->value.l_function(argc, args);
+			result = func->value.l_function(argc, args, env);
 			free(args);
 			return result;
 		}

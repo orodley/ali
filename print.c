@@ -77,7 +77,7 @@ void print_error(enum ErrorCode err)
 			fputs("Wrong number of arguments", stdout);
 			break;
 		case NAME_NOT_A_SYMBOL:
-			fputs("First argument of `define' must be a symbol", stdout);
+			fputs("Identifiers must be symbols", stdout);
 			break;
 	}
 }
