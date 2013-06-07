@@ -101,6 +101,8 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 			free(token.str);
 			return make_error(UNMATCHED_CLOSE_PAREN);
 	}
+
+	return NULL;
 }
 
 struct Token get_token()

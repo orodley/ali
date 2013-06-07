@@ -12,10 +12,12 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 	switch (sexpr->type) {
 		/* Self-evaluating types */
 		case INT:
+		case BOOL:
 		case CHAR:
 		case STRING:
 		case FUNCTION:
 		case NIL:
+		case ERROR:
 			return sexpr;
 		case SYMBOL: {
 			struct LispObj *value = lookup(sexpr, env);
@@ -52,6 +54,8 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 			return result;
 		}
 	}
+
+	return NULL;
 }
 
 struct LispObj *eval_special_form(struct LispObj *sexpr, struct Env *env)

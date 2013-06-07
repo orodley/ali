@@ -1,5 +1,7 @@
 #include <string.h>
 #include "types.h"
+#include "cons.h"
+#include "eq.h"
 
 int eq(struct LispObj *obj1, struct LispObj *obj2)
 {
@@ -17,5 +19,15 @@ int eq(struct LispObj *obj1, struct LispObj *obj2)
 			return strcmp(obj1->value.l_string, obj2->value.l_string) == 0;
 		case SYMBOL:
 			return strcmp(obj1->value.l_symbol, obj2->value.l_symbol) == 0;
+		case CONS:
+			return eq(car(obj1), car(obj2)) && eq(cdr(obj1), cdr(obj2));
+		case NIL:
+			return 1;
+		case FUNCTION:
+			return obj1->value.l_function == obj2->value.l_function;
+		case ERROR:
+			return obj1->value.l_err      == obj2->value.l_err;
 	}
+
+	return 0;
 }

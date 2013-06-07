@@ -118,6 +118,8 @@ struct LispObj *make_cons(struct Cons *c_cons)
 
 	lo_cons->type         = CONS;
 	lo_cons->value.l_cons = c_cons;
+
+	return lo_cons;
 }
 
 
