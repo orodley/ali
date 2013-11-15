@@ -129,22 +129,22 @@ LispObj *make_cons(Cons *c_cons)
 void add_ref(LispObj *obj)
 {
 	switch (obj->type) {
-		case INT:
-		case BOOL:
-		case CHAR:
-		case STRING:
-		case SYMBOL:
-		case FUNCTION:
-		case ERROR:
-			obj->refc++;
-			break;
-		case CONS:
-			obj->refc++;
-			add_ref(car(obj));
-			add_ref(cdr(obj));
-			break;
-		case NIL:
-			break;
+	case INT:
+	case BOOL:
+	case CHAR:
+	case STRING:
+	case SYMBOL:
+	case FUNCTION:
+	case ERROR:
+		obj->refc++;
+		break;
+	case CONS:
+		obj->refc++;
+		add_ref(car(obj));
+		add_ref(cdr(obj));
+		break;
+	case NIL:
+		break;
 	}
 }
 
@@ -159,25 +159,25 @@ void free_lisp_obj(LispObj *obj)
 void always_free_lisp_obj(LispObj *obj)
 {
 	switch (obj->type) {
-		case NIL:
-			return; /* NIL sticks around */
-		case INT:
-		case BOOL:
-		case CHAR:
-		case ERROR:
-		case FUNCTION:
-			break;
-		case STRING:
-			free(obj->value.l_string);
-			break;
-		case SYMBOL:
-			free(obj->value.l_symbol);
-			break;
-		case CONS:
-			free_lisp_obj(car(obj));
-			free_lisp_obj(cdr(obj));
-			free(obj->value.l_cons);
-			break;
+	case NIL:
+		return; /* NIL sticks around */
+	case INT:
+	case BOOL:
+	case CHAR:
+	case ERROR:
+	case FUNCTION:
+		break;
+	case STRING:
+		free(obj->value.l_string);
+		break;
+	case SYMBOL:
+		free(obj->value.l_symbol);
+		break;
+	case CONS:
+		free_lisp_obj(car(obj));
+		free_lisp_obj(cdr(obj));
+		free(obj->value.l_cons);
+		break;
 	}
 
 	free(obj);

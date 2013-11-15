@@ -35,70 +35,70 @@ LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 		return NULL;
 
 	switch (token.type) {
-		case T_INTEGER: {
-			int x;
-			sscanf(token.str, "%d", &x);
+	case T_INTEGER: {
+		int x;
+		sscanf(token.str, "%d", &x);
 
-			free(token.str);
-			return make_int(x);
+		free(token.str);
+		return make_int(x);
+	}
+	case T_CHAR: {
+		char c = token.str[2]; /* TODO: name-char reading */
+
+		free(token.str);
+		return make_char(c);
+	}
+	case T_STRING: {
+		int len = strlen(token.str);
+
+		/* Take a substring of token.str, skipping the first
+		 * and last chars */
+		char *str = malloc(sizeof(char) * (len - 2));
+		strncpy(str, token.str + 1, len - 2);
+		*(str + (len - 2)) = '\0';
+
+		free(token.str);
+		return make_string(str);
+	}
+	case T_SYMBOL: {
+		return make_symbol(token.str);
+	}
+	case T_OPEN_PAREN: {
+		free(token.str);
+		LispObj *car = read_from_yybuf(yy_buf);
+
+		if (car == NULL) /* Unmatched open parenthesis */
+			return NULL; /* TODO: Error handling/reporting */
+
+		if ((car->type == ERROR) &&
+				(car->value.l_err == UNMATCHED_CLOSE_PAREN)) {
+			always_free_lisp_obj(car);
+			return get_nil();
 		}
-		case T_CHAR: {
-			char c = token.str[2]; /* TODO: name-char reading */
 
-			free(token.str);
-			return make_char(c);
-		}
-		case T_STRING: {
-			int len = strlen(token.str);
+		Cons *curr_cons = cons(car, get_nil());
+		LispObj *list = make_cons(curr_cons);
 
-			/* Take a substring of token.str, skipping the first
-			 * and last chars */
-			char *str = malloc(sizeof(char) * (len - 2));
-			strncpy(str, token.str + 1, len - 2);
-			*(str + (len - 2)) = '\0';
+		for (;;) {
+			car = read_from_yybuf(yy_buf);
 
-			free(token.str);
-			return make_string(str);
-		}
-		case T_SYMBOL: {
-			return make_symbol(token.str);
-		}
-		case T_OPEN_PAREN: {
-			free(token.str);
-			LispObj *car = read_from_yybuf(yy_buf);
-
-			if (car == NULL) /* Unmatched open parenthesis */
-				return NULL; /* TODO: Error handling/reporting */
-
+			if (car == NULL)
+				return NULL;
 			if ((car->type == ERROR) &&
 					(car->value.l_err == UNMATCHED_CLOSE_PAREN)) {
 				always_free_lisp_obj(car);
-				return get_nil();
+				break;
 			}
 
-			Cons *curr_cons = cons(car, get_nil());
-			LispObj *list = make_cons(curr_cons);
-
-			for (;;) {
-				car = read_from_yybuf(yy_buf);
-
-				if (car == NULL)
-					return NULL;
-				if ((car->type == ERROR) &&
-						(car->value.l_err == UNMATCHED_CLOSE_PAREN)) {
-					always_free_lisp_obj(car);
-					break;
-				}
-
-				curr_cons->cdr = make_cons(cons(car, get_nil()));
-				curr_cons = curr_cons->cdr->value.l_cons;
-			}
-
-			return list;
+			curr_cons->cdr = make_cons(cons(car, get_nil()));
+			curr_cons = curr_cons->cdr->value.l_cons;
 		}
-		case T_CLOSE_PAREN:
-			free(token.str);
-			return make_error(UNMATCHED_CLOSE_PAREN);
+
+		return list;
+	}
+	case T_CLOSE_PAREN:
+		free(token.str);
+		return make_error(UNMATCHED_CLOSE_PAREN);
 	}
 
 	return NULL;

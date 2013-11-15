@@ -9,66 +9,66 @@
 LispObj *eval(LispObj *sexpr, Env *env)
 {
 	switch (sexpr->type) {
-		/* Self-evaluating types */
-		case INT:
-		case BOOL:
-		case CHAR:
-		case STRING:
-		case FUNCTION:
-		case NIL:
-		case ERROR:
-			return sexpr;
-		case SYMBOL: {
-			LispObj *value = lookup(sexpr, env);
-			if (value == NULL)
-				return make_error(UNBOUND_VAR);
-			else
-				return value;
-		}
-		case CONS: {
-			LispObj *result = eval_special_form(sexpr, env);
-			if (result != NULL) /* It was a special form */
-				return result;
+	/* Self-evaluating types */
+	case INT:
+	case BOOL:
+	case CHAR:
+	case STRING:
+	case FUNCTION:
+	case NIL:
+	case ERROR:
+		return sexpr;
+	case SYMBOL: {
+		LispObj *value = lookup(sexpr, env);
+		if (value == NULL)
+			return make_error(UNBOUND_VAR);
+		else
+			return value;
+	}
+	case CONS: {
+		LispObj *result = eval_special_form(sexpr, env);
+		if (result != NULL) /* It was a special form */
+			return result;
 
-			LispObj *func = eval(car(sexpr), env);
+		LispObj *func = eval(car(sexpr), env);
 
-			if (func->type == ERROR)
-				return func;
-			if (func->type != FUNCTION)
-				return make_error(NOT_A_FUNCTION);
+		if (func->type == ERROR)
+			return func;
+		if (func->type != FUNCTION)
+			return make_error(NOT_A_FUNCTION);
 
-			int argc = 0;
-			LispObj *s = sexpr;
-			for (; cdr(s)->type != NIL; argc++)
-				s = cdr(s);
+		int argc = 0;
+		LispObj *s = sexpr;
+		for (; cdr(s)->type != NIL; argc++)
+			s = cdr(s);
 
-			LispObj **args = malloc(sizeof(LispObj*) * argc);
-			for (int i = 0; i < argc; i++) {
-				sexpr = cdr(sexpr);
+		LispObj **args = malloc(sizeof(LispObj*) * argc);
+		for (int i = 0; i < argc; i++) {
+			sexpr = cdr(sexpr);
 
-				LispObj *arg = eval(car(sexpr), env);
-				if (arg->type == ERROR) {
-					result = arg; /* Propagate errors */
-					goto cleanup;
-				}
-
-				args[i] = arg;
+			LispObj *arg = eval(car(sexpr), env);
+			if (arg->type == ERROR) {
+				result = arg; /* Propagate errors */
+				goto cleanup;
 			}
 
-			result = func->value.l_function(argc, args, env);
+			args[i] = arg;
+		}
+
+		result = func->value.l_function(argc, args, env);
 
 cleanup:
-			/* We have to free all of the arguments to the function, but
-			 * result might be/depend on one of them, so increment refc
-			 * first, and then remove it afterwards */
-			add_ref(result);
-			for (int i = 0; i < argc; i++)
-				free_lisp_obj(args[i]);
-			result->refc--;
+		/* We have to free all of the arguments to the function, but
+		 * result might be/depend on one of them, so increment refc
+		 * first, and then remove it afterwards */
+		add_ref(result);
+		for (int i = 0; i < argc; i++)
+			free_lisp_obj(args[i]);
+		result->refc--;
 
-			free(args);
-			return result;
-		}
+		free(args);
+		return result;
+	}
 	}
 
 	return NULL;
