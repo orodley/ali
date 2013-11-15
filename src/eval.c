@@ -49,6 +49,7 @@ LispObj *eval(LispObj *sexpr, Env *env)
 			LispObj *arg = eval(car(sexpr), env);
 			if (arg->type == ERROR) {
 				result = arg; /* Propagate errors */
+				argc = i - 1; // Make sure we don't try and free beyond here
 				goto cleanup;
 			}
 
