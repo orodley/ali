@@ -9,6 +9,9 @@ BUILTIN_FUNCTION(b_plus)
 	int result = 0;
 
 	for (int i = 0; i < argc; i++) {
+		if (argv[i]->type != INT)
+			return make_error(WRONG_TYPE);
+
 		result += argv[i]->value.l_int;
 	}
 
@@ -19,13 +22,19 @@ BUILTIN_FUNCTION(b_minus)
 {
 	if (argc == 0)
 		return make_error(WRONG_ARGC);
+	if (argv[0]->type != INT)
+		return make_error(WRONG_TYPE);
 	if (argc == 1)
 		return make_int(-argv[0]->value.l_int);
 
 	int result = argv[0]->value.l_int;
 
-	for (int i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++) {
+		if (argv[i]->type != INT)
+			return make_error(WRONG_TYPE);
+
 		result -= argv[i]->value.l_int;
+	}
 
 	return make_int(result);
 }
@@ -35,6 +44,9 @@ BUILTIN_FUNCTION(b_multiply)
 	int result = 1;
 
 	for (int i = 0; i < argc; i++) {
+		if (argv[i]->type != INT)
+			return make_error(WRONG_TYPE);
+
 		result *= argv[i]->value.l_int;
 	}
 
@@ -53,6 +65,8 @@ BUILTIN_FUNCTION(b_car)
 {
 	if (argc != 1)
 		return make_error(WRONG_ARGC);
+	if (argv[0]->type != CONS)
+		return make_error(WRONG_TYPE);
 
 	return car(argv[0]);
 }
@@ -61,6 +75,8 @@ BUILTIN_FUNCTION(b_cdr)
 {
 	if (argc != 1)
 		return make_error(WRONG_ARGC);
+	if (argv[0]->type != CONS)
+		return make_error(WRONG_TYPE);
 
 	return cdr(argv[0]);
 }

@@ -8,7 +8,7 @@ typedef enum LispType
 	CONS,
 	NIL,
 	FUNCTION,
-	ERROR
+	ERROR,
 } LispType;
 
 typedef enum ErrorCode
@@ -18,6 +18,7 @@ typedef enum ErrorCode
 	NOT_A_FUNCTION,
 	WRONG_ARGC,
 	NAME_NOT_A_SYMBOL,
+	WRONG_TYPE,
 } ErrorCode;
 
 struct Env;

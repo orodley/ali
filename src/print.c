@@ -79,6 +79,9 @@ void print_error(ErrorCode err)
 		case NAME_NOT_A_SYMBOL:
 			fputs("Identifiers must be symbols", stdout);
 			break;
+		case WRONG_TYPE:
+			fputs("Wrong type supplied to function", stdout);
+			break;
 	}
 }
 
