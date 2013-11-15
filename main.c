@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 
 	putchar('\n');
 
+	yylex_destroy();
 	free_env(init_env);
 	free_nil();
 

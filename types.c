@@ -174,8 +174,6 @@ void always_free_lisp_obj(struct LispObj *obj)
 			free(obj->value.l_symbol);
 			break;
 		case CONS:
-			car(obj)->refc--;
-			cdr(obj)->refc--;
 			free_lisp_obj(car(obj));
 			free_lisp_obj(cdr(obj));
 			free(obj->value.l_cons);

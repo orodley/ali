@@ -59,6 +59,14 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 			result = func->value.l_function(argc, args, env);
 
 cleanup:
+			/* We have to free all of the arguments to the function, but
+			 * result might be/depend on one of them, so increment refc
+			 * first, and then remove it afterwards */
+			add_ref(result);
+			for (int i = 0; i < argc; i++)
+				free_lisp_obj(args[i]);
+			result->refc--;
+
 			free(args);
 			return result;
 		}
