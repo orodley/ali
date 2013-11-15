@@ -1,14 +1,14 @@
 /* Associates names to values */
-struct Env {
-	struct LispObj *key;
-	struct LispObj *value;
+typedef struct Env {
+	LispObj *key;
+	LispObj *value;
 
 	struct Env *next;
-};
+} Env;
 
-struct LispObj *lookup(struct LispObj *symbol, struct Env *env);
-struct Env *extend(struct Env *env, struct LispObj *key, struct LispObj *value);
-void extend_in_place(struct Env *env, struct LispObj *key, struct LispObj *value);
-struct Env *extend_func(struct Env *env, char *name, BuiltinFunction func);
-void free_env(struct Env *env);
-void set(struct Env *env, struct LispObj *key, struct LispObj *value);
+LispObj *lookup(LispObj *symbol, Env *env);
+Env *extend(Env *env, LispObj *key, LispObj *value);
+void extend_in_place(Env *env, LispObj *key, LispObj *value);
+Env *extend_func(Env *env, char *name, BuiltinFunction func);
+void free_env(Env *env);
+void set(Env *env, LispObj *key, LispObj *value);

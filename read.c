@@ -8,28 +8,28 @@
 #include "print.h"
 #include "read.h"
 
-struct LispObj *read_from_string(char *str)
+LispObj *read_from_string(char *str)
 {
 	YY_BUFFER_STATE yy_buf = yy_scan_string(str);
-	struct LispObj *obj = read_from_yybuf(yy_buf);
+	LispObj *obj = read_from_yybuf(yy_buf);
 	yy_delete_buffer(yy_buf);
 
 	return obj;
 }
 
-struct LispObj *read_from_stream(FILE *stream)
+LispObj *read_from_stream(FILE *stream)
 {
 	YY_BUFFER_STATE yy_buf = yy_create_buffer(stream, YY_BUF_SIZE);
-	struct LispObj *obj = read_from_yybuf(yy_buf);
+	LispObj *obj = read_from_yybuf(yy_buf);
 	yy_delete_buffer(yy_buf);
 
 	return obj;
 }
 
-struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
+LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 {
 	yy_switch_to_buffer(yy_buf);
-	struct Token token = get_token();
+	Token token = get_token();
 
 	if (token.str == NULL) /* a NULL pointer = EOF */
 		return NULL;
@@ -65,7 +65,7 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 		}
 		case T_OPEN_PAREN: {
 			free(token.str);
-			struct LispObj *car = read_from_yybuf(yy_buf);
+			LispObj *car = read_from_yybuf(yy_buf);
 
 			if (car == NULL) /* Unmatched open parenthesis */
 				return NULL; /* TODO: Error handling/reporting */
@@ -76,8 +76,8 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 				return get_nil();
 			}
 
-			struct Cons *curr_cons = cons(car, get_nil());
-			struct LispObj *list = make_cons(curr_cons);
+			Cons *curr_cons = cons(car, get_nil());
+			LispObj *list = make_cons(curr_cons);
 
 			for (;;) {
 				car = read_from_yybuf(yy_buf);
@@ -104,17 +104,17 @@ struct LispObj *read_from_yybuf(YY_BUFFER_STATE yy_buf)
 	return NULL;
 }
 
-struct Token get_token()
+Token get_token()
 {
 	char *str = NULL;
-	enum TokenType type = yylex();
+	TokenType type = yylex();
 
 	if (type != 0) {
 		str = malloc(sizeof(char) * strlen(yytext) + 1);
 		strcpy(str, yytext);
 	}
 
-	return (struct Token) {
+	return (Token) {
 		.str  = str,
 		.type = type
 	};

@@ -4,10 +4,9 @@
 #include "cons.h"
 #include "eq.h"
 #include "builtins.h"
-#include "env.h"
 #include "eval.h"
 
-struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
+LispObj *eval(LispObj *sexpr, Env *env)
 {
 	switch (sexpr->type) {
 		/* Self-evaluating types */
@@ -20,18 +19,18 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 		case ERROR:
 			return sexpr;
 		case SYMBOL: {
-			struct LispObj *value = lookup(sexpr, env);
+			LispObj *value = lookup(sexpr, env);
 			if (value == NULL)
 				return make_error(UNBOUND_VAR);
 			else
 				return value;
 		}
 		case CONS: {
-			struct LispObj *result = eval_special_form(sexpr, env);
+			LispObj *result = eval_special_form(sexpr, env);
 			if (result != NULL) /* It was a special form */
 				return result;
 
-			struct LispObj *func = eval(car(sexpr), env);
+			LispObj *func = eval(car(sexpr), env);
 
 			if (func->type == ERROR)
 				return func;
@@ -39,15 +38,15 @@ struct LispObj *eval(struct LispObj *sexpr, struct Env *env)
 				return make_error(NOT_A_FUNCTION);
 
 			int argc = 0;
-			struct LispObj *s = sexpr;
+			LispObj *s = sexpr;
 			for (; cdr(s)->type != NIL; argc++)
 				s = cdr(s);
 
-			struct LispObj **args = malloc(sizeof(struct LispObj*) * argc);
+			LispObj **args = malloc(sizeof(LispObj*) * argc);
 			for (int i = 0; i < argc; i++) {
 				sexpr = cdr(sexpr);
 
-				struct LispObj *arg = eval(car(sexpr), env);
+				LispObj *arg = eval(car(sexpr), env);
 				if (arg->type == ERROR) {
 					result = arg; /* Propagate errors */
 					goto cleanup;
@@ -75,7 +74,7 @@ cleanup:
 	return NULL;
 }
 
-struct LispObj *eval_special_form(struct LispObj *sexpr, struct Env *env)
+LispObj *eval_special_form(LispObj *sexpr, Env *env)
 {
 	if (car(sexpr)->type != SYMBOL)
 		return NULL;
@@ -85,10 +84,10 @@ struct LispObj *eval_special_form(struct LispObj *sexpr, struct Env *env)
 	if (strcmp(name, "quote") == 0) {
 		return cadr(sexpr);
 	} else if (strcmp(name, "if") == 0) {
-		struct LispObj *f         = make_bool(0);
-		struct LispObj *condition = eval(cadr(sexpr), env);
+		LispObj *f         = make_bool(0);
+		LispObj *condition = eval(cadr(sexpr), env);
 
-		struct LispObj *result_form;
+		LispObj *result_form;
 		if (eq(f, condition))
 			result_form = cadr(cddr(sexpr)); /* false */
 		else

@@ -6,7 +6,7 @@
 #include "print.h"
 
 /* Print an object such that reading it will produce the same object */
-void prin1(struct LispObj *obj)
+void prin1(LispObj *obj)
 {
 	switch(obj->type) {
 		case INT:
@@ -32,7 +32,7 @@ void prin1(struct LispObj *obj)
 			prin1(car(obj));
 
 			for (;;) {
-				enum LispType type = cdr(obj)->type;
+				LispType type = cdr(obj)->type;
 
 				if (type == NIL)
 					break;
@@ -60,7 +60,7 @@ void prin1(struct LispObj *obj)
 
 /* TODO: Better error reporting, e.g. rather than just printing "Unbound
  * variable", tell the user *which* variable is unbound */
-void print_error(enum ErrorCode err)
+void print_error(ErrorCode err)
 {
 	fputs("ERROR: ", stdout);
 	switch (err) {
@@ -83,7 +83,7 @@ void print_error(enum ErrorCode err)
 }
 
 /* Like prin1, but preceded by a space and followed by a newline */
-void print(struct LispObj *obj)
+void print(LispObj *obj)
 {
 	putchar(' ');
 	prin1(obj);

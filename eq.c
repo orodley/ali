@@ -3,7 +3,7 @@
 #include "cons.h"
 #include "eq.h"
 
-int eq(struct LispObj *obj1, struct LispObj *obj2)
+int eq(LispObj *obj1, LispObj *obj2)
 {
 	if (obj1->type != obj2->type)
 		return 0;

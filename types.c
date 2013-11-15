@@ -5,9 +5,9 @@
 
 /* Type-related functions */
 
-struct LispObj *make_int(int x)
+LispObj *make_int(int x)
 {
-	struct LispObj *num = malloc(sizeof(struct LispObj));
+	LispObj *num = malloc(sizeof(LispObj));
 
 	num->type        = INT;
 	num->value.l_int = x;
@@ -16,9 +16,9 @@ struct LispObj *make_int(int x)
 	return num;
 }
 
-struct LispObj *make_bool(int b)
+LispObj *make_bool(int b)
 {
-	struct LispObj *bool = malloc(sizeof(struct LispObj));
+	LispObj *bool = malloc(sizeof(LispObj));
 
 	bool->type         = BOOL;
 	bool->value.l_bool = (b ? 1 : 0);
@@ -27,9 +27,9 @@ struct LispObj *make_bool(int b)
 	return bool;
 }
 
-struct LispObj *make_char(char c)
+LispObj *make_char(char c)
 {
-	struct LispObj *character = malloc(sizeof(struct LispObj));
+	LispObj *character = malloc(sizeof(LispObj));
 
 	character->type         = CHAR;
 	character->value.l_char = c;
@@ -38,9 +38,9 @@ struct LispObj *make_char(char c)
 	return character;
 }
 
-struct LispObj *make_string(char *str)
+LispObj *make_string(char *str)
 {
-	struct LispObj *string = malloc(sizeof(struct LispObj));
+	LispObj *string = malloc(sizeof(LispObj));
 
 	string->type           = STRING;
 	string->value.l_string = str;
@@ -49,9 +49,9 @@ struct LispObj *make_string(char *str)
 	return string;
 }
 
-struct LispObj *make_symbol(char *str)
+LispObj *make_symbol(char *str)
 {
-	struct LispObj *symbol = malloc(sizeof(struct LispObj));
+	LispObj *symbol = malloc(sizeof(LispObj));
 
 	symbol->type           = SYMBOL;
 	symbol->value.l_symbol = str;
@@ -65,7 +65,7 @@ struct LispObj *make_symbol(char *str)
  * statically allocated, this will fail. Since free_lisp_obj has no way
  * of telling whether the string is statically allocated, we need to
  * dynamically allocate them all */
-struct LispObj *make_symbol_cpy(char *str)
+LispObj *make_symbol_cpy(char *str)
 {
 	int str_len = strlen(str);
 	char *str_cpy = malloc(sizeof(char) * str_len + 1);
@@ -74,9 +74,9 @@ struct LispObj *make_symbol_cpy(char *str)
 	return make_symbol(str_cpy);
 }
 
-struct LispObj *make_function(BuiltinFunction func)
+LispObj *make_function(BuiltinFunction func)
 {
-	struct LispObj *function = malloc(sizeof(struct LispObj));
+	LispObj *function = malloc(sizeof(LispObj));
 
 	function->type             = FUNCTION;
 	function->value.l_function = func;
@@ -85,9 +85,9 @@ struct LispObj *make_function(BuiltinFunction func)
 	return function;
 }
 
-struct LispObj *make_error(enum ErrorCode err)
+LispObj *make_error(ErrorCode err)
 {
-	struct LispObj *error = malloc(sizeof(struct LispObj));
+	LispObj *error = malloc(sizeof(LispObj));
 
 	error->type        = ERROR;
 	error->value.l_err = err;
@@ -96,12 +96,12 @@ struct LispObj *make_error(enum ErrorCode err)
 	return error;
 }
 
-struct LispObj* nil;
+LispObj* nil;
 
-struct LispObj *get_nil()
+LispObj *get_nil()
 {
 	if (nil == NULL) {
-		nil = malloc(sizeof(struct LispObj));
+		nil = malloc(sizeof(LispObj));
 		nil->type = NIL;
 		nil->refc = 0;
 	}
@@ -115,9 +115,9 @@ void free_nil()
 	free(nil);
 }
 
-struct LispObj *make_cons(struct Cons *c_cons)
+LispObj *make_cons(Cons *c_cons)
 {
-	struct LispObj *lo_cons = malloc(sizeof(struct LispObj));
+	LispObj *lo_cons = malloc(sizeof(LispObj));
 
 	lo_cons->type         = CONS;
 	lo_cons->value.l_cons = c_cons;
@@ -126,7 +126,7 @@ struct LispObj *make_cons(struct Cons *c_cons)
 	return lo_cons;
 }
 
-void add_ref(struct LispObj *obj)
+void add_ref(LispObj *obj)
 {
 	switch (obj->type) {
 		case INT:
@@ -150,13 +150,13 @@ void add_ref(struct LispObj *obj)
 
 /* Free the memory allocated for a LispObj, and the object in its value slot.
  * If it is a cons, its car and cdr are recursively freed */
-void free_lisp_obj(struct LispObj *obj)
+void free_lisp_obj(LispObj *obj)
 {
 	if ((--obj->refc <= 0) && (obj->type != NIL))
 		always_free_lisp_obj(obj);
 }
 
-void always_free_lisp_obj(struct LispObj *obj)
+void always_free_lisp_obj(LispObj *obj)
 {
 	switch (obj->type) {
 		case NIL:

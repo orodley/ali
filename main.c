@@ -5,15 +5,14 @@
 #include "read.h"
 #include "builtins.h"
 #include "eval.h"
-#include "env.h"
 
 const char PROMPT[] = "> ";
 const char RESULT[] = ":";
 
 int main(int argc, char *argv[])
 {
-	struct LispObj *obj, *value;
-	struct Env *init_env = get_init_env();
+	LispObj *obj, *value;
+	Env *init_env = get_init_env();
 
 	/* Stop yylex() from printing anything */
 	yyout = fopen("/dev/null", "r");

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "types.h"
 #include "cons.h"
-#include "env.h"
 #include "builtins.h"
 
 BUILTIN_FUNCTION(b_plus)
@@ -77,9 +76,9 @@ BUILTIN_FUNCTION(b_set)
 	return argv[1];
 }
 
-struct Env *get_init_env()
+Env *get_init_env()
 {
-	struct Env *env = NULL;
+	Env *env = NULL;
 
 	/* Builtin functions */
 	env = extend_func(env, "+",    b_plus);

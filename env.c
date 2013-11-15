@@ -3,7 +3,7 @@
 #include "eq.h"
 #include "env.h"
 
-struct LispObj *lookup(struct LispObj *symbol, struct Env *env)
+LispObj *lookup(LispObj *symbol, Env *env)
 {
 	if (env == NULL)
 		return NULL;
@@ -13,10 +13,10 @@ struct LispObj *lookup(struct LispObj *symbol, struct Env *env)
 		return lookup(symbol, env->next);
 }
 
-struct Env *extend(struct Env *env, struct LispObj *key, struct LispObj *value)
+Env *extend(Env *env, LispObj *key, LispObj *value)
 {
-	struct Env *prev_env = env;
-	env = malloc(sizeof(struct Env));
+	Env *prev_env = env;
+	env = malloc(sizeof(Env));
 
 	env->key   = key;
 	env->value = value;
@@ -28,14 +28,14 @@ struct Env *extend(struct Env *env, struct LispObj *key, struct LispObj *value)
 	return env;
 }
 
-struct Env *extend_func(struct Env *env, char *name, BuiltinFunction func)
+Env *extend_func(Env *env, char *name, BuiltinFunction func)
 {
 	return extend(env, make_symbol_cpy(name), make_function(func));
 }
 
-void extend_in_place(struct Env *env, struct LispObj *key, struct LispObj *value)
+void extend_in_place(Env *env, LispObj *key, LispObj *value)
 {
-	struct Env *new_env = malloc(sizeof(struct Env));
+	Env *new_env = malloc(sizeof(Env));
 	new_env->key   = env->key;
 	new_env->value = env->value;
 	new_env->next  = env->next;
@@ -48,7 +48,7 @@ void extend_in_place(struct Env *env, struct LispObj *key, struct LispObj *value
 	value->refc++;
 }
 
-void free_env(struct Env *env)
+void free_env(Env *env)
 {
 	if (env == NULL)
 		return;
@@ -56,12 +56,12 @@ void free_env(struct Env *env)
 	free_lisp_obj(env->key);
 	free_lisp_obj(env->value);
 
-	struct Env *next = env->next;
+	Env *next = env->next;
 	free(env);
 	free_env(next); /* Call free_env last to make it tail-recursive */
 }
 
-void set(struct Env *env, struct LispObj *key, struct LispObj *value)
+void set(Env *env, LispObj *key, LispObj *value)
 {
 	if (env == NULL)
 		return;
