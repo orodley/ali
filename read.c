@@ -5,8 +5,8 @@
 #include "types.h"
 #include "cons.h"
 #include "lexer.h"
-#include "print.h"
 #include "read.h"
+#include "print.h"
 
 LispObj *read_from_string(char *str)
 {
