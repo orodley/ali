@@ -69,6 +69,9 @@ cleanup:
 
 struct LispObj *eval_special_form(struct LispObj *sexpr, struct Env *env)
 {
+	if (car(sexpr)->type != SYMBOL)
+		return NULL;
+
 	char *name = car(sexpr)->value.l_symbol;
 
 	if (strcmp(name, "quote") == 0) {
