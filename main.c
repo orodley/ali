@@ -41,7 +41,5 @@ int main(int argc, char *argv[])
 	free_env(init_env);
 	free_nil();
 
-	fclose(yyout);
-
 	return 0;
 }
