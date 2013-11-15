@@ -21,7 +21,7 @@ BUILTIN_FUNCTION(b_minus)
 		return make_error(WRONG_ARGC);
 	if (argc == 1)
 		return make_int(-argv[0]->value.l_int);
-	
+
 	int result = argv[0]->value.l_int;
 
 	for (int i = 1; i < argc; i++)

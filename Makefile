@@ -1,8 +1,8 @@
 CC     = gcc
 LD     = $(CC)
 CFLAGS = -std=c99 -Wall
-OBJS   = lexer.o
-OBJS  += $(patsubst %.c, %.o, $(wildcard *.c))
+OBJS   = src/lexer.o
+OBJS  += $(patsubst %.c, %.o, $(wildcard src/*.c))
 
 .PHONY: all
 all: ali
@@ -13,9 +13,9 @@ debug: ali
 ali: $(OBJS)
 	$(LD) -o $@ $^
 
-lexer.c: lexer.l
-	flex -o $@ --header=lexer.h $<
+src/lexer.c: src/lexer.l
+	flex -o $@ --header=src/lexer.h $<
 
 clean:
-	rm -f *.o
-	rm -f lexer.c lexer.h
+	rm -f src/*.o
+	rm -f src/lexer.c src/lexer.h

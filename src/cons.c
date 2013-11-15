@@ -9,7 +9,7 @@ Cons *cons(LispObj *car, LispObj *cdr)
 	cdr->refc++;
 
 	Cons *new_cons = malloc(sizeof(Cons));
-	
+
 	new_cons->car = car;
 	new_cons->cdr = cdr;
 
