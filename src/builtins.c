@@ -92,6 +92,23 @@ BUILTIN_FUNCTION(b_set)
 	return argv[1];
 }
 
+BUILTIN_FUNCTION(b_def)
+{
+	if (argc != 2)
+		return make_error(WRONG_ARGC);
+	if (argv[0]->type != SYMBOL)
+		return make_error(NAME_NOT_A_SYMBOL);
+
+	LispObj *name_sym = argv[0];
+	LispObj *value    = argv[1];
+
+	if (lookup(name_sym, env) != NULL)
+		return make_error(REDEFINITION);
+
+	extend_in_place(env, name_sym, value);
+	return name_sym;
+}
+
 Env *get_init_env()
 {
 	Env *env = NULL;
@@ -104,6 +121,7 @@ Env *get_init_env()
 	env = extend_func(env, "car",  b_car);
 	env = extend_func(env, "cdr",  b_cdr);
 	env = extend_func(env, "set",  b_set);
+	env = extend_func(env, "def",  b_def);
 
 	/* Boolean values */
 	env = extend(env, make_symbol_cpy("t"), make_bool(1));

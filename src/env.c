@@ -1,7 +1,9 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
 #include "eq.h"
 #include "env.h"
+#include "print.h"
 
 LispObj *lookup(LispObj *symbol, Env *env)
 {
@@ -73,4 +75,17 @@ void set(Env *env, LispObj *key, LispObj *value)
 	} else {
 		set(env->next, key, value);
 	}
+}
+
+// For debugging
+void print_env(Env *env)
+{
+	if (env == NULL)
+		return;
+
+	prin1(env->key);
+	fputs(" => ", stdout);
+	prin1(env->value);
+	putchar('\n');
+	print_env(env->next);
 }

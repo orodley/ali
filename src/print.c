@@ -81,6 +81,9 @@ void print_error(ErrorCode err)
 	case WRONG_TYPE:
 		fputs("Wrong type supplied to function", stdout);
 		break;
+	case REDEFINITION:
+		fputs("Attempting to redefine name", stdout);
+		break;
 	}
 }
 

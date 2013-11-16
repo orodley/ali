@@ -19,6 +19,7 @@ typedef enum ErrorCode
 	WRONG_ARGC,
 	NAME_NOT_A_SYMBOL,
 	WRONG_TYPE,
+	REDEFINITION,
 } ErrorCode;
 
 struct Env;
